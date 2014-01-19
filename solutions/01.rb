@@ -51,14 +51,9 @@ class Array
     occurrences
   end
 
-  def combine_with(other_list)
-    smallest_length = other_list.length < length ? other_list.length : length
-    combined_list = []
-    (0..smallest_length - 1).each do |number|
-      combined_list << self[number] << other_list[number]
-    end
-    combined_list << other_list.drop(smallest_length) << drop(smallest_length)
-
-    combined_list.flatten
+  def combine_with(other)
+    smaller_size = [size, other.size].min
+    remainder = drop(smaller_size) + other.drop(smaller_size)
+    zip(other).flatten(1).take(2 * smaller_size) + remainder
   end
 end
