@@ -5,20 +5,9 @@ class Integer
   end
 
   def prime_factors
-    find_prime_factors([], 2, self)
-  end
-
-  def find_prime_factors(list_of_divisors, current_divisor, current_number)
-    while current_divisor <= abs
-      if current_divisor.prime? and current_number % current_divisor == 0
-        list_of_divisors << current_divisor
-        current_number = current_number / current_divisor
-      else
-        current_divisor += 1
-      end
-    end
-
-    list_of_divisors
+    return [] if abs < 2
+    divisor = 2.upto(abs).find { |divisor| remainder(divisor).zero? }
+    [divisor] + (abs / divisor).prime_factors
   end
 
   def harmonic
