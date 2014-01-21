@@ -6,17 +6,15 @@ module Graphics
       @x, @y = x, y
     end
 
-    def eql? (other_point)
-      @x.eql?(other_point.x) and @y.eql? (other_point.y)
-    end
-
     def draw(canvas)
       canvas.set_pixel(@x, @y)
     end
 
-    def ==(other_point)
-      eql?(other_point)
+    def eql? (other_point)
+      @x.eql?(other_point.x) and @y.eql? (other_point.y)
     end
+
+    alias == eql?
 
     def hash
       @x.hash & @y.hash
@@ -29,7 +27,7 @@ module Graphics
     def initialize(first_point,second_point)
       @first_point, @second_point = first_point, second_point
     end
-  
+
     def from
       if @first_point.x == @second_point.x
         return @first_point.y > @second_point.y ? @second_point : @first_point
@@ -56,9 +54,7 @@ module Graphics
       (is_first_equal_second and is_second_equal_first)
     end
 
-    def ==(other_line)
-      eql?(other_line)
-    end
+    alias == eql?
 
     def hash
       @first_point.hash & @second_point.hash
@@ -72,78 +68,39 @@ module Graphics
   end
 
   class Rectangle
-    attr_reader :first_point, :second_point, :points
+    attr_reader :left, :right
 
-    def initialize(first_point, second_point)
-      @first_point = first_point
-      @second_point = second_point
-      @third_point = Point.new(first_point.x, second_point.y)
-      @fourth_point = Point.new(second_point.x, first_point.y)
-      @points = [@first_point, @second_point, @third_point, @fourth_point]
-    end
-
-    def get_left_point(first_point, second_point)
-      if first_point.x == second_point.x
-        return first_point.y > second_point.y ? second_point : first_point
+    def initialize(left, right)
+      if left.x > right.x or (left.x == right.x and left.y > right.y)
+        @left  = right
+        @right = left
+      else
+        @left  = left
+        @right = right
       end
-
-      return first_point.x > second_point.x ? second_point : first_point
-    end
-
-    def left
-      get_left_point @first_point, @second_point
-    end
-
-    def right
-      if @first_point.x == @second_point.x
-        return @first_point.y < @second_point.y ? @second_point : @first_point
-      end
-
-      return @first_point.x < @second_point.x ? @second_point : @first_point
     end
 
     def top_left
-      sorted_points = @points.sort do |first_point, second_point|
-        first_point.x > second_point.x ? 1 : first_point.y <=> second_point.y
-      end
-
-      sorted_points[0]
-    end
-
-    def bottom_left
-      sorted_points = @points.sort do |first_point, second_point|
-        first_point.x > second_point.x ? 1 : second_point.y <=> first_point.y
-      end
-
-      sorted_points[0]
-    end
-
-    def bottom_right
-      sorted_points =  @points.sort do |first_point, second_point|
-        first_point.y < second_point.y ? 1 : second_point.x <=> first_point.x
-      end
-
-      sorted_points[0]
+      Point.new left.x,  [left.y, right.y].min
     end
 
     def top_right
-      sorted_points = @points.sort do |first_point, second_point|
-        first_point.y > second_point.y ? 1 : second_point.x <=> first_point.x
-      end
-
-      sorted_points[0]
+      Point.new right.x, [left.y, right.y].min
     end
 
-    def eql? (other_rectangle)
-      top_left.eql?(other_rectangle.top_left) and
-      top_right.eql?(other_rectangle.top_right) and
-      bottom_left.eql?(other_rectangle.bottom_left) and
-      bottom_right.eql?(other_rectangle.bottom_right)
+    def bottom_right
+      Point.new right.x, [left.y, right.y].max
     end
 
-    def ==(other_rectangle)
-      eql?(other_rectangle)
+    def bottom_left
+      Point.new left.x,  [left.y, right.y].max
     end
+
+    def eql?(other)
+      top_left == other.top_left and bottom_right == other.bottom_right
+    end
+
+    alias == eql?
 
     def hash
       top_left.hash & top_right.hash & bottom_left.hash & bottom_right.hash
@@ -221,6 +178,7 @@ module Graphics
     end
 
     def set_pixel(x, y)
+      return if width <= x or height <= y
       @field[y][x] = true
     end
 
@@ -310,3 +268,6 @@ module Graphics
     end
   end
 end
+#E:\GithubRepositories\Photoshop\ruby-retrospective-3\solutions\01.rb
+#rspec E:\GithubRepositories\Photoshop\ruby-retrospective-3\specs\01_spec.rb --require E:\GithubRepositories\Photoshop\ruby-retrospective-3\solutions\01.rb  --colour --format documentation
+#E:\GithubRepositories\Photoshop\ruby-retrospective-3\specs\03_spec.rb
