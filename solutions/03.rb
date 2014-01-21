@@ -29,7 +29,7 @@ module Graphics
     def initialize(first_point,second_point)
       @first_point, @second_point = first_point, second_point
     end
-
+  
     def from
       if @first_point.x == @second_point.x
         return @first_point.y > @second_point.y ? @second_point : @first_point

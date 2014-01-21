@@ -12,7 +12,7 @@ class Integer
 
   def harmonic
     return if self <= 0
-    (1..self).map { |e| 1 / e.to_r }.reduce(:+)
+    1.upto(self).map { |e| 1 / e.to_r }.reduce(:+)
   end
 
   def digits
