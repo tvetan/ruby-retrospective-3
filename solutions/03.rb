@@ -259,6 +259,3 @@ module Graphics
     end
   end
 end
-#E:\GithubRepositories\Photoshop\ruby-retrospective-3\solutions\01.rb
-#rspec E:\GithubRepositories\Photoshop\ruby-retrospective-3\specs\01_spec.rb --require E:\GithubRepositories\Photoshop\ruby-retrospective-3\solutions\01.rb  --colour --format documentation
-#E:\GithubRepositories\Photoshop\ruby-retrospective-3\specs\03_spec.rb
