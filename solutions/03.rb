@@ -65,51 +65,51 @@ module Graphics
       points = bresenham_algorithm.apply_on(canvas)
     end
 
-      class BresenhamAlgorithm
-    def initialize(from, to)
-      prepare_coordinates_and_detect_steepness(from.x, from.y, to.x, to.y)
-      prepare_deltas_and_initial_values
-    end
+    class BresenhamAlgorithm
+      def initialize(from, to)
+        prepare_coordinates_and_detect_steepness(from.x, from.y, to.x, to.y)
+        prepare_deltas_and_initial_values
+      end
 
-    def apply_on(canvas)
-      @steps.each do |x|
-        canvas.set_pixel (@steep ? @y : x), (@steep ? x : @y)
+      def apply_on(canvas)
+        @steps.each do |x|
+          canvas.set_pixel (@steep ? @y : x), (@steep ? x : @y)
 
-        @error -= @delta_y
+          @error -= @delta_y
 
-        if @error < 0
-          @y += @y_step
-          @error += @delta_x
+          if @error < 0
+            @y += @y_step
+            @error += @delta_x
+          end
         end
       end
-    end
 
-    private
+      private
 
-    def prepare_coordinates_and_detect_steepness(from_x, from_y, to_x, to_y)
-      @steep = (to_y - from_y).abs > (to_x - from_x).abs
-      if @steep
-        @from_x, @from_y = from_y, from_x
-        @to_x, @to_y = to_y, to_x
-      else
-        @from_x, @from_y = from_x, from_y
-        @to_x, @to_y = to_x, to_y
+      def prepare_coordinates_and_detect_steepness(from_x, from_y, to_x, to_y)
+        @steep = (to_y - from_y).abs > (to_x - from_x).abs
+        if @steep
+          @from_x, @from_y = from_y, from_x
+          @to_x, @to_y = to_y, to_x
+        else
+          @from_x, @from_y = from_x, from_y
+          @to_x, @to_y = to_x, to_y
+        end
+      end
+
+      def prepare_deltas_and_initial_values
+        @delta_x = (@to_x - @from_x).abs
+        @delta_y = (@to_y - @from_y).abs
+
+        @error = @delta_x / 2
+
+        @y_step = @from_y < @to_y ? 1 : -1
+
+        @y = @from_y
+
+        @steps = @from_x < @to_x ? @from_x.upto(@to_x) : @from_x.downto(@to_x)
       end
     end
-
-    def prepare_deltas_and_initial_values
-      @delta_x = (@to_x - @from_x).abs
-      @delta_y = (@to_y - @from_y).abs
-
-      @error = @delta_x / 2
-
-      @y_step = @from_y < @to_y ? 1 : -1
-
-      @y = @from_y
-
-      @steps = @from_x < @to_x ? @from_x.upto(@to_x) : @from_x.downto(@to_x)
-    end
-  end
   end
 
   class Rectangle
